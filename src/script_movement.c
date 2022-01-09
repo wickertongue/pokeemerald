@@ -212,8 +212,10 @@ static void ScriptMovement_MoveObjects(u8 taskId)
 static void ScriptMovement_TakeStep(u8 taskId, u8 moveScrId, u8 objEventId, const u8 *movementScript)
 {
     u8 nextMoveActionId;
+    u32 experience;
+    struct Pokemon *party;
+
     party = gPlayerParty;
-    u8 experience;
     experience = -1;
 
     // For each pokemon, in party
