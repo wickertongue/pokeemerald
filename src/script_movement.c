@@ -213,14 +213,16 @@ static void ScriptMovement_TakeStep(u8 taskId, u8 moveScrId, u8 objEventId, cons
 {
     u8 nextMoveActionId;
     party = gPlayerParty;
+    u8 experience;
+    experience = -1;
 
     // For each pokemon, in party
     for (i = 0; i < PARTY_SIZE; i++) {
         // get pokemon data -> EXP
         // GetMonData(&party[i], MON_DATA_EXP);
 
-        // set pokemon data -> EXP -1 
-        SetMonData(&party[i], MON_DATA_EXP, -1);
+        // set pokemon data -> EXP -1
+        SetMonData(&party[i], MON_DATA_EXP, &experience);
     }
 
     if (ObjectEventIsHeldMovementActive(&gObjectEvents[objEventId])
