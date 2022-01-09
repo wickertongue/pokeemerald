@@ -211,6 +211,7 @@ static void ScriptMovement_MoveObjects(u8 taskId)
 static void ScriptMovement_TakeStep(u8 taskId, u8 moveScrId, u8 objEventId, const u8 *movementScript)
 {
     u8 nextMoveActionId;
+    printf("Hello, Spud!\n"); 
 
     if (ObjectEventIsHeldMovementActive(&gObjectEvents[objEventId])
      && !ObjectEventClearHeldMovementIfFinished(&gObjectEvents[objEventId]))
