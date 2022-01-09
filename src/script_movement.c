@@ -5,6 +5,7 @@
 #include "util.h"
 #include "constants/event_objects.h"
 #include "constants/event_object_movement.h"
+#include <stdio.h>
 
 // static functions
 static void ScriptMovement_StartMoveObjects(u8 priority);
