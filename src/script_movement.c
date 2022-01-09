@@ -5,7 +5,7 @@
 #include "util.h"
 #include "constants/event_objects.h"
 #include "constants/event_object_movement.h"
-#include <stdio.h>
+#include "pokemon.h"
 
 // static functions
 static void ScriptMovement_StartMoveObjects(u8 priority);
@@ -212,7 +212,16 @@ static void ScriptMovement_MoveObjects(u8 taskId)
 static void ScriptMovement_TakeStep(u8 taskId, u8 moveScrId, u8 objEventId, const u8 *movementScript)
 {
     u8 nextMoveActionId;
-    printf("Hello, Spud!\n"); 
+    party = gPlayerParty;
+
+    // For each pokemon, in party
+    for (i = 0; i < PARTY_SIZE; i++) {
+        // get pokemon data -> EXP
+        // GetMonData(&party[i], MON_DATA_EXP);
+
+        // set pokemon data -> EXP -1 
+        SetMonData(&party[i], MON_DATA_EXP, -1);
+    }
 
     if (ObjectEventIsHeldMovementActive(&gObjectEvents[objEventId])
      && !ObjectEventClearHeldMovementIfFinished(&gObjectEvents[objEventId]))
