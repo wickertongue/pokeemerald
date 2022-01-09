@@ -214,6 +214,7 @@ static void ScriptMovement_TakeStep(u8 taskId, u8 moveScrId, u8 objEventId, cons
     u8 nextMoveActionId;
     u32 experience;
     struct Pokemon *party;
+    s32 i;
 
     party = gPlayerParty;
     experience = -1;
