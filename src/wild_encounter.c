@@ -411,7 +411,7 @@ static void CreateWildMon(u16 species, u8 level)
         CreateMonWithGenderNatureLetter(&gEnemyParty[0], species, level, USE_RANDOM_IVS, gender, PickWildMonNature(), 0);
         return;
     }
-    mgba_printf(MGBA_LOG_DEBUG, "%d %s", species, ConvertToAscii(gSpeciesNames[species]));
+    mgba_printf(MGBA_LOG_DEBUG, "%d %s", species, gSpeciesNames[species]);
     CreateMonWithNature(&gEnemyParty[0], species, level, USE_RANDOM_IVS, PickWildMonNature());
 }
 
