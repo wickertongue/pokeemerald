@@ -5,8 +5,16 @@
 #include "util.h"
 #include "constants/event_objects.h"
 #include "constants/event_object_movement.h"
-#include "printf.h"
-#include "mgba.h"
+
+
+// TODO: the below allows for use of debug logging, 
+// need to find a way of getting this to work with 
+// every step.
+
+// #include "printf.h"
+// #include "mgba.h"
+// mgba_printf(MGBA_LOG_DEBUG, "%s", "Hello");
+
 
 // static functions
 static void ScriptMovement_StartMoveObjects(u8 priority);
@@ -230,7 +238,6 @@ static void ScriptMovement_TakeStep(u8 taskId, u8 moveScrId, u8 objEventId, cons
         {
             movementScript++;
             SetMovementScript(moveScrId, movementScript);
-            mgba_printf(MGBA_LOG_DEBUG, "%s", "Took a step");
         }
     }
 }
