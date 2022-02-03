@@ -138,6 +138,10 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     struct MapPosition position;
     u8 playerDirection;
     u16 metatileBehavior;
+    struct Pokemon *party = NULL;
+    struct Pokemon *mon_one = &gPlayerParty[0];
+    struct Pokemon *mon_two = &gPlayerParty[1];
+    struct Pokemon *mon_three = &gPlayerParty[2];
 
     gSpecialVar_LastTalked = 0;
     gSelectedObjectEvent = 0;
@@ -157,17 +161,42 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     if (input->tookStep)
     {
         u32 current_steps = GetGameStat(GAME_STAT_STEPS);
+        u8 monId = 1; 
         
         IncrementGameStat(GAME_STAT_STEPS);
-
         current_steps = GetGameStat(GAME_STAT_STEPS);
-        mgba_printf(MGBA_LOG_DEBUG, "%s", "Step counter incremented");
-        mgba_printf(MGBA_LOG_DEBUG, "%d", current_steps);
+        mgba_printf(MGBA_LOG_DEBUG, "%s %d", "steps incremented: ", current_steps);
 
-        DecrementGameStat(GAME_STAT_STEPS);
-        current_steps = GetGameStat(GAME_STAT_STEPS);
-        mgba_printf(MGBA_LOG_DEBUG, "%s", "Step counter decremented");
-        mgba_printf(MGBA_LOG_DEBUG, "%d", current_steps);
+        
+        // ----------------------------------------------------------------
+        // Space for 'fixing' player Pokemon experience
+        
+        party = gPlayerParty;
+        
+        // NOTE:
+        // when party equals gPlayerParty it returns the same number as 
+        // gPlayerParty[0], which is presumably the first pokemon
+        // in the players party?
+
+        mgba_printf(MGBA_LOG_DEBUG, "%s %d", "party: ", party);
+        mgba_printf(MGBA_LOG_DEBUG, "%s %d", "poke one: ", mon_one);
+        mgba_printf(MGBA_LOG_DEBUG, "%s %d", "poke two: ", mon_two);
+        mgba_printf(MGBA_LOG_DEBUG, "%s %d", "poke three: ", mon_three);
+
+        // struct Pokemon *mon = &gPlayerParty[monId];
+
+        // u32 currExp = GetMonData(mon, MON_DATA_EXP);
+        // SetMonData(mon, MON_DATA_EXP++);
+        // GetMonData()
+
+        // ----------------------------------------------------------------
+        // ----------------------------------------------------------------
+        // The below will be handy at a later date as a 'guide'
+        // to implement another function in another file for the above section
+
+        // DecrementGameStat(GAME_STAT_STEPS);
+        // current_steps = GetGameStat(GAME_STAT_STEPS);
+        // mgba_printf(MGBA_LOG_DEBUG, "%s %d", "Steps decremented: ", current_steps);
 
         IncrementBirthIslandRockStepCount();
         if (TryStartStepBasedScript(&position, metatileBehavior, playerDirection) == TRUE)
