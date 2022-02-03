@@ -447,19 +447,19 @@ void IncrementGameStat(u8 index)
     }
 }
 
-// void DecrementGameStat(u8 index)
-// {
-//     if (index < NUM_USED_GAME_STATS)
-//     {
-//         u32 statVal = GetGameStat(index);
-//         if (statVal < 0xFFFFFF)
-//             statVal--;
-//         else
-//             statVal = 0xFFFFFF;
+void DecrementGameStat(u8 index)
+{
+    if (index < NUM_USED_GAME_STATS)
+    {
+        u32 statVal = GetGameStat(index);
+        if (statVal < 0xFFFFFF)
+            statVal--;
+        else
+            statVal = 0xFFFFFF;
 
-//         SetGameStat(index, statVal);
-//     }
-// }
+        SetGameStat(index, statVal);
+    }
+}
 
 u32 GetGameStat(u8 index)
 {

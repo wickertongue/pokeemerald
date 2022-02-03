@@ -158,15 +158,16 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     {
         u32 current_steps = GetGameStat(GAME_STAT_STEPS);
         
-        mgba_printf(MGBA_LOG_DEBUG, "%s", "I took a step");
         IncrementGameStat(GAME_STAT_STEPS);
+
+        current_steps = GetGameStat(GAME_STAT_STEPS);
         mgba_printf(MGBA_LOG_DEBUG, "%s", "Step counter incremented");
         mgba_printf(MGBA_LOG_DEBUG, "%d", current_steps);
 
-        // DecrementGameStat(GAME_STAT_STEPS);
-        // current_steps = GetGameStat(GAME_STAT_STEPS);
-        // mgba_printf(MGBA_LOG_DEBUG, "%s", "Step counter decremented");
-        // mgba_printf(MGBA_LOG_DEBUG, "%d", current_steps);
+        DecrementGameStat(GAME_STAT_STEPS);
+        current_steps = GetGameStat(GAME_STAT_STEPS);
+        mgba_printf(MGBA_LOG_DEBUG, "%s", "Step counter decremented");
+        mgba_printf(MGBA_LOG_DEBUG, "%d", current_steps);
 
         IncrementBirthIslandRockStepCount();
         if (TryStartStepBasedScript(&position, metatileBehavior, playerDirection) == TRUE)
