@@ -34,6 +34,8 @@
 #include "constants/map_types.h"
 #include "constants/songs.h"
 #include "constants/trainer_hill.h"
+#include "printf.h"
+#include "mgba.h"
 
 static EWRAM_DATA u8 sWildEncounterImmunitySteps = 0;
 static EWRAM_DATA u16 sPreviousPlayerMetatileBehavior = 0;
@@ -154,7 +156,18 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         return TRUE;
     if (input->tookStep)
     {
+        u32 current_steps = GetGameStat(GAME_STAT_STEPS);
+        
+        mgba_printf(MGBA_LOG_DEBUG, "%s", "I took a step");
         IncrementGameStat(GAME_STAT_STEPS);
+        mgba_printf(MGBA_LOG_DEBUG, "%s", "Step counter incremented");
+        mgba_printf(MGBA_LOG_DEBUG, "%d", current_steps);
+
+        // DecrementGameStat(GAME_STAT_STEPS);
+        // current_steps = GetGameStat(GAME_STAT_STEPS);
+        // mgba_printf(MGBA_LOG_DEBUG, "%s", "Step counter decremented");
+        // mgba_printf(MGBA_LOG_DEBUG, "%d", current_steps);
+
         IncrementBirthIslandRockStepCount();
         if (TryStartStepBasedScript(&position, metatileBehavior, playerDirection) == TRUE)
             return TRUE;
