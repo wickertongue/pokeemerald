@@ -162,6 +162,7 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     {
         u32 current_steps = GetGameStat(GAME_STAT_STEPS);
         u8 monId = 1; 
+        s32 index;
         
         IncrementGameStat(GAME_STAT_STEPS);
         current_steps = GetGameStat(GAME_STAT_STEPS);
@@ -182,6 +183,51 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         mgba_printf(MGBA_LOG_DEBUG, "%s %d", "poke one: ", mon_one);
         mgba_printf(MGBA_LOG_DEBUG, "%s %d", "poke two: ", mon_two);
         mgba_printf(MGBA_LOG_DEBUG, "%s %d", "poke three: ", mon_three);
+        mgba_printf(MGBA_LOG_DEBUG, "%s %d", "pokemon one species: ", GetMonData(&party[0], MON_DATA_SPECIES));
+        mgba_printf(MGBA_LOG_DEBUG, "%s %d", "pokemon one species: ", GetMonData(&party[1], MON_DATA_SPECIES));
+        mgba_printf(MGBA_LOG_DEBUG, "%s %d", "pokemon one species: ", GetMonData(&party[2], MON_DATA_SPECIES));
+
+        for (index = 0; index < 6; index++)
+        {
+            u32 pokemon_exp = GetMonData(&party[index], MON_DATA_EXP);
+            u32 increased_pokemon_exp = pokemon_exp - 1;
+
+            mgba_printf(MGBA_LOG_DEBUG, "%s %d %d", "pokemon: ", index, pokemon_exp);
+
+            SetMonData(&party[index], MON_DATA_EXP, &increased_pokemon_exp);
+
+            pokemon_exp = GetMonData(&party[index], MON_DATA_EXP);
+            mgba_printf(MGBA_LOG_DEBUG, "%s %d %d", "pokemon: ", index, pokemon_exp);
+
+            // NOTE: The above works, but, we need to:
+            // - lower pokemon level when they reach level line
+            // - ensure stats lower when level lowers
+            // - stop exp from going below 0
+
+            // SetMonData(&gPlayerParty[gBattlerPartyIndexes[gActiveBattler]], MON_DATA_PP_BONUSES, &totalPPBonuses);
+
+            // if (GetMonData(&party[i], MON_DATA_HP) == 0)
+            //     continue;
+
+            // GetMonData(&party[i], MON_DATA_SPECIES); // Unused return value.
+            // GetMonData(&party[i], MON_DATA_ABILITY_NUM); // Unused return value.
+
+            // for (opposingBattler = GetBattlerAtPosition(opposingPosition), j = 0; j < MAX_MON_MOVES; j++)
+            // {
+            //     move = GetMonData(&party[i], MON_DATA_MOVE1 + j);
+            //     if (move == MOVE_NONE)
+            //         continue;
+
+            //     moveFlags = AI_TypeCalc(move, gBattleMons[opposingBattler].species, gBattleMons[opposingBattler].ability);
+            //     if (moveFlags & MOVE_RESULT_SUPER_EFFECTIVE && Random() % 3 < 2)
+            //     {
+            //         // We found a mon.
+            //         *(gBattleStruct->AI_monToSwitchIntoId + gActiveBattler) = i;
+            //         BtlController_EmitTwoReturnValues(BUFFER_B, B_ACTION_SWITCH, 0);
+            //         return TRUE;
+            //     }
+            // }
+        }
 
         // struct Pokemon *mon = &gPlayerParty[monId];
 

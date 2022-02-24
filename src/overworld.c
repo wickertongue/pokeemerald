@@ -447,6 +447,7 @@ void IncrementGameStat(u8 index)
     }
 }
 
+// NOTE: Below code is custom and created by me
 void DecrementGameStat(u8 index)
 {
     if (index < NUM_USED_GAME_STATS)
