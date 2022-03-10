@@ -160,44 +160,61 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         return TRUE;
     if (input->tookStep)
     {
-        u32 current_steps = GetGameStat(GAME_STAT_STEPS);
-        u8 monId = 1; 
+        // u32 current_steps = GetGameStat(GAME_STAT_STEPS);
+        // u8 monId = 1; 
         s32 index;
         
-        IncrementGameStat(GAME_STAT_STEPS);
-        current_steps = GetGameStat(GAME_STAT_STEPS);
-        mgba_printf(MGBA_LOG_DEBUG, "%s %d", "steps incremented: ", current_steps);
-
+        // IncrementGameStat(GAME_STAT_STEPS);
+        // current_steps = GetGameStat(GAME_STAT_STEPS);
         
         // ----------------------------------------------------------------
         // Space for 'fixing' player Pokemon experience
         
-        party = gPlayerParty;
+        // party = gPlayerParty;
         
         // NOTE:
         // when party equals gPlayerParty it returns the same number as 
         // gPlayerParty[0], which is presumably the first pokemon
         // in the players party?
 
-        mgba_printf(MGBA_LOG_DEBUG, "%s %d", "party: ", party);
-        mgba_printf(MGBA_LOG_DEBUG, "%s %d", "poke one: ", mon_one);
-        mgba_printf(MGBA_LOG_DEBUG, "%s %d", "poke two: ", mon_two);
-        mgba_printf(MGBA_LOG_DEBUG, "%s %d", "poke three: ", mon_three);
-        mgba_printf(MGBA_LOG_DEBUG, "%s %d", "pokemon one species: ", GetMonData(&party[0], MON_DATA_SPECIES));
-        mgba_printf(MGBA_LOG_DEBUG, "%s %d", "pokemon one species: ", GetMonData(&party[1], MON_DATA_SPECIES));
-        mgba_printf(MGBA_LOG_DEBUG, "%s %d", "pokemon one species: ", GetMonData(&party[2], MON_DATA_SPECIES));
-
         for (index = 0; index < 6; index++)
         {
-            u32 pokemon_exp = GetMonData(&party[index], MON_DATA_EXP);
-            u32 increased_pokemon_exp = pokemon_exp - 1;
+            struct Pokemon *pokemon = &gPlayerParty[index];
 
-            mgba_printf(MGBA_LOG_DEBUG, "%s %d %d", "pokemon: ", index, pokemon_exp);
+            u32 currExp = GetMonData(pokemon, MON_DATA_EXP);
+            u16 species = GetMonData(pokemon, MON_DATA_SPECIES);
+            u8 currLevel = GetMonData(pokemon, MON_DATA_LEVEL);
+            u32 prevLvlExpBoundary = gExperienceTables[gBaseStats[species].growthRate][currLevel - 1];
 
-            SetMonData(&party[index], MON_DATA_EXP, &increased_pokemon_exp);
+            u32 decreased_currExp = currExp - 1;
 
-            pokemon_exp = GetMonData(&party[index], MON_DATA_EXP);
-            mgba_printf(MGBA_LOG_DEBUG, "%s %d %d", "pokemon: ", index, pokemon_exp);
+            if (currExp > 0)
+            {
+                mgba_printf(MGBA_LOG_DEBUG, "%s", "------------------------------");
+                mgba_printf(MGBA_LOG_DEBUG, "%s %d", "Pokemon index: ", index);
+                mgba_printf(MGBA_LOG_DEBUG, "%s %d", "Pokemon's current level: ", currLevel);
+                mgba_printf(MGBA_LOG_DEBUG, "%s %d", "Pokemon's current exp: ", currExp);
+                mgba_printf(MGBA_LOG_DEBUG, "%s %d", "Pokemon's previous level exp boundary: ", prevLvlExpBoundary);
+
+                
+                SetMonData(pokemon, MON_DATA_EXP, &decreased_currExp);
+                currExp = GetMonData(pokemon, MON_DATA_EXP);
+                
+                mgba_printf(MGBA_LOG_DEBUG, "%s %d", "Pokemon's new exp: ", currExp);
+
+                if (currExp <= prevLvlExpBoundary)
+                {
+                    mgba_printf(MGBA_LOG_DEBUG, "%s", "Lowering pokemon level!");
+                    CalculateMonStats(pokemon);
+                }
+
+                currLevel = GetMonData(pokemon, MON_DATA_LEVEL);
+                mgba_printf(MGBA_LOG_DEBUG, "%s %d", "Pokemon's new level: ", currLevel);
+                mgba_printf(MGBA_LOG_DEBUG, "%s", "------------------------------");
+                mgba_printf(MGBA_LOG_DEBUG, "%s", "");
+            } 
+
+
 
             // NOTE: The above works, but, we need to:
             // - lower pokemon level when they reach level line
