@@ -138,10 +138,6 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     struct MapPosition position;
     u8 playerDirection;
     u16 metatileBehavior;
-    struct Pokemon *party = NULL;
-    struct Pokemon *mon_one = &gPlayerParty[0];
-    struct Pokemon *mon_two = &gPlayerParty[1];
-    struct Pokemon *mon_three = &gPlayerParty[2];
 
     gSpecialVar_LastTalked = 0;
     gSelectedObjectEvent = 0;
@@ -160,17 +156,7 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         return TRUE;
     if (input->tookStep)
     {
-        // u32 current_steps = GetGameStat(GAME_STAT_STEPS);
-        // u8 monId = 1; 
         s32 index;
-        
-        // IncrementGameStat(GAME_STAT_STEPS);
-        // current_steps = GetGameStat(GAME_STAT_STEPS);
-        
-        // ----------------------------------------------------------------
-        // Space for 'fixing' player Pokemon experience
-        
-        // party = gPlayerParty;
         
         // NOTE:
         // when party equals gPlayerParty it returns the same number as 
@@ -182,84 +168,14 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
             struct Pokemon *pokemon = &gPlayerParty[index];
 
             u32 currExp = GetMonData(pokemon, MON_DATA_EXP);
-            u16 species = GetMonData(pokemon, MON_DATA_SPECIES);
-            u8 currLevel = GetMonData(pokemon, MON_DATA_LEVEL);
-            u32 prevLvlExpBoundary = gExperienceTables[gBaseStats[species].growthRate][currLevel - 1];
-
             u32 decreased_currExp = currExp - 1;
-
+            
             if (currExp > 0)
             {
-                mgba_printf(MGBA_LOG_DEBUG, "%s", "------------------------------");
-                mgba_printf(MGBA_LOG_DEBUG, "%s %d", "Pokemon index: ", index);
-                mgba_printf(MGBA_LOG_DEBUG, "%s %d", "Pokemon's current level: ", currLevel);
-                mgba_printf(MGBA_LOG_DEBUG, "%s %d", "Pokemon's current exp: ", currExp);
-                mgba_printf(MGBA_LOG_DEBUG, "%s %d", "Pokemon's previous level exp boundary: ", prevLvlExpBoundary);
-
-                
                 SetMonData(pokemon, MON_DATA_EXP, &decreased_currExp);
-                currExp = GetMonData(pokemon, MON_DATA_EXP);
-                
-                mgba_printf(MGBA_LOG_DEBUG, "%s %d", "Pokemon's new exp: ", currExp);
-
-                if (currExp <= prevLvlExpBoundary)
-                {
-                    mgba_printf(MGBA_LOG_DEBUG, "%s", "Lowering pokemon level!");
-                    CalculateMonStats(pokemon);
-                }
-
-                currLevel = GetMonData(pokemon, MON_DATA_LEVEL);
-                mgba_printf(MGBA_LOG_DEBUG, "%s %d", "Pokemon's new level: ", currLevel);
-                mgba_printf(MGBA_LOG_DEBUG, "%s", "------------------------------");
-                mgba_printf(MGBA_LOG_DEBUG, "%s", "");
+                CalculateMonStats(pokemon);
             } 
-
-
-
-            // NOTE: The above works, but, we need to:
-            // - lower pokemon level when they reach level line
-            // - ensure stats lower when level lowers
-            // - stop exp from going below 0
-
-            // SetMonData(&gPlayerParty[gBattlerPartyIndexes[gActiveBattler]], MON_DATA_PP_BONUSES, &totalPPBonuses);
-
-            // if (GetMonData(&party[i], MON_DATA_HP) == 0)
-            //     continue;
-
-            // GetMonData(&party[i], MON_DATA_SPECIES); // Unused return value.
-            // GetMonData(&party[i], MON_DATA_ABILITY_NUM); // Unused return value.
-
-            // for (opposingBattler = GetBattlerAtPosition(opposingPosition), j = 0; j < MAX_MON_MOVES; j++)
-            // {
-            //     move = GetMonData(&party[i], MON_DATA_MOVE1 + j);
-            //     if (move == MOVE_NONE)
-            //         continue;
-
-            //     moveFlags = AI_TypeCalc(move, gBattleMons[opposingBattler].species, gBattleMons[opposingBattler].ability);
-            //     if (moveFlags & MOVE_RESULT_SUPER_EFFECTIVE && Random() % 3 < 2)
-            //     {
-            //         // We found a mon.
-            //         *(gBattleStruct->AI_monToSwitchIntoId + gActiveBattler) = i;
-            //         BtlController_EmitTwoReturnValues(BUFFER_B, B_ACTION_SWITCH, 0);
-            //         return TRUE;
-            //     }
-            // }
         }
-
-        // struct Pokemon *mon = &gPlayerParty[monId];
-
-        // u32 currExp = GetMonData(mon, MON_DATA_EXP);
-        // SetMonData(mon, MON_DATA_EXP++);
-        // GetMonData()
-
-        // ----------------------------------------------------------------
-        // ----------------------------------------------------------------
-        // The below will be handy at a later date as a 'guide'
-        // to implement another function in another file for the above section
-
-        // DecrementGameStat(GAME_STAT_STEPS);
-        // current_steps = GetGameStat(GAME_STAT_STEPS);
-        // mgba_printf(MGBA_LOG_DEBUG, "%s %d", "Steps decremented: ", current_steps);
 
         IncrementBirthIslandRockStepCount();
         if (TryStartStepBasedScript(&position, metatileBehavior, playerDirection) == TRUE)
